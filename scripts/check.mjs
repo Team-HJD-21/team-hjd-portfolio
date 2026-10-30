@@ -25,6 +25,8 @@ const titles=[...home.matchAll(/class="card-title">([^<]+)/g)].map(m=>m[1].trim(
 assert.deepEqual(titles.slice(0,4),['PlanetX','Custom Engine &amp; Editor','The Developer','Runster'],'Representative order changed');
 assert.equal(new Set(titles).size,expected,'Duplicate or missing gallery cards');
 assert(!/IN PLAY|DESIGNED|hy\.|다음 플레이를 함께/.test(home),'Unrequested decorative copy returned');
+const nav=home.match(/<nav aria-label="주요 메뉴">([\s\S]*?)<\/nav>/)[1];
+assert.deepEqual([...nav.matchAll(/href="[^"]*#([^"]+)"/g)].map(m=>m[1]),['about','documents','projects'],'Navigation must follow landing order');
 const docs=JSON.parse(await fs.readFile('content/documents.json','utf8'));
 for(const doc of Object.values(docs)){await fs.access(path.join(root,'hyunseok',doc.file));await fs.access(path.join(root,'hyunseok',doc.preview));}
 console.log(`PASS: ${html.length} HTML pages, ${expected} project details, ${checkedLinks} local links/assets; no temporary credentials or unresolved blocks.`);
