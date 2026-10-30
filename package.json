@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "render:pdf": "node scripts/render-pdfs.mjs",
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
     "sync:notion": "node scripts/sync-notion.mjs",

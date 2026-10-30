@@ -8,6 +8,7 @@ const current=JSON.parse(await fs.readFile('content/notion.json','utf8'));
 const cfg=JSON.parse(await fs.readFile('content/presentation.json','utf8'));
 const gallery=JSON.parse(await fs.readFile('content/gallery.json','utf8'));
 const mediaMap=JSON.parse(await fs.readFile('content/assets.json','utf8'));
+const documents=JSON.parse(await fs.readFile('content/documents.json','utf8'));
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function notion(endpoint){
  for(let attempt=0;attempt<4;attempt++){
@@ -60,7 +61,10 @@ async function importPage(id){
   // Local paths only: no temporary signed URL is persisted in the content snapshot.
   body=body.split(source).join(local);
   mediaMap[local]=local;
-  if(ref){mediaMap[source]=local;gallery[ref[2]]=local;}
+  if(ref){
+   mediaMap[source]=local;gallery[ref[2]]=local;
+   if(documents[ref[2]])documents[ref[2]]={...documents[ref[2]],file:local,preview:local.endsWith('.pdf')?local.slice(0,-4)+'-preview.png':local};
+  }
  }
  if(/X-Amz-(?:Signature|Security-Token|Credential)/i.test(body))throw Error('Signed URL would enter content snapshot; import aborted');
  const titleProperty=Object.values(page.properties??{}).find(p=>p.type==='title');
@@ -82,6 +86,7 @@ try{
  await fs.writeFile('.local/notion-next.json',JSON.stringify(next,null,2));
  await fs.writeFile('content/assets.json',JSON.stringify(mediaMap,null,2));
  await fs.writeFile('content/gallery.json',JSON.stringify(gallery,null,2));
+ await fs.writeFile('content/documents.json',JSON.stringify(documents,null,2));
  await fs.rename('.local/notion-next.json','content/notion.json');
  console.log('Notion snapshot updated. No write was made to Notion.');
 }catch(error){console.error('Notion sync stopped: '+error.message);process.exitCode=1;}

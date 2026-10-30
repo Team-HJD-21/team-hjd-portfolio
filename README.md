@@ -4,7 +4,7 @@ Notion을 콘텐츠 원본으로 사용하는 게임 클라이언트 개발자 �
 
 - 공개 주소: `https://portfolio.teamhjd.com/hyunseok/`
 - 원본: https://anyanyang.notion.site/2e9c8404c9328051ab45c80805366ec1
-- 16개 프로젝트, 대표작 4개, 분류 필터·검색, 프로젝트별 상세 페이지
+- 16개 프로젝트, 대표작 4개, Notion 분류별 갤러리·검색, 프로젝트별 상세 페이지
 - 초기 콘텐츠는 2026-10-31에 연결된 Notion 도구로 읽었습니다. Notion에는 쓰지 않았습니다.
 
 ## 편집 기준
@@ -14,6 +14,8 @@ Notion을 콘텐츠 원본으로 사용하는 게임 클라이언트 개발자 �
 - `content/notion.json`: 허용한 원본 페이지 ID와 가져온 본문
 - `content/presentation.json`: 사이트 주소와 프로젝트 표시 설정
 - `content/gallery.json`, `content/assets.json`: 영구 보관한 실제 이미지의 로컬 경로
+- `content/documents.json`: Notion 첨부 문서의 원본·첫 페이지 미리보기 경로
+- `dark.css`, `scripts/templates.mjs`: 다크 기본 화면과 소개·갤러리 배치
 - `assets/`: 실제 작품 화면. AI로 만든 가짜 화면이나 임시 서명 URL을 사용하지 않습니다.
 - `scripts/build.mjs`: 정적 HTML 생성 및 HTML 정제
 - `scripts/sync-notion.mjs`: Notion 공식 API를 통한 읽기 전용 동기화
@@ -26,6 +28,7 @@ Node.js 24 LTS와 npm을 권장합니다.
 
 ```sh
 npm ci
+npm run render:pdf
 npm run build
 npm run check
 npm run preview
@@ -59,4 +62,8 @@ npm run preview
 
 ## 콘텐츠 출처와 한계
 
-본문의 수치와 개인·팀 기여 구분은 Notion 원문을 따릅니다. 사이트 제작 과정에서 엔진·게임 빌드나 성능 측정을 새로 수행한 것은 아닙니다. 일부 보고서·첨부파일은 Notion 원본에서 열도록 연결합니다. 실제 YouTube 영상은 개인정보 보호 강화 도메인의 지연 로딩 iframe으로 표시하며 자동 재생하지 않습니다.
+본문의 수치와 개인·팀 기여 구분은 Notion 원문을 따릅니다. 사이트 제작 과정에서 엔진·게임 빌드나 성능 측정을 새로 수행한 것은 아닙니다. 수료증, 상장, PlanetX 포스터, 그래픽스 보고서 5개는 원본을 보존하고 이미지 미리보기를 제공합니다. 클릭하면 모달에서 첫 페이지를 보고 원본 PDF 전체를 열 수 있습니다. PDF 미리보기 생성에는 Poppler의 `pdftoppm`이 필요하며 Actions에서 준비합니다. 실제 YouTube 영상은 개인정보 보호 강화 도메인의 지연 로딩 iframe으로 표시하며 자동 재생하지 않습니다.
+
+## 화면 기준
+
+다크 모드를 기본으로 소개·기술·학력·수상을 가장 위에 둡니다. 원문 분류를 유지하고 대표작은 PlanetX → Custom Engine → The Developer → Runster 순서입니다. 장식용 로고·기울어진 이미지·채용 문구를 추가하지 않습니다. 개인 문체와 미디어 기준은 상위 `design.md`를 따릅니다.

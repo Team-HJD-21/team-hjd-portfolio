@@ -28,6 +28,9 @@ jobs:
       - name: Retain reviewed snapshot when sync is not configured
         if: env.NOTION_API_KEY == ''
         run: echo '::notice::Notion sync is not configured. Publishing the reviewed snapshot; Notion changes are not automatically reflected yet.'
+      - name: Prepare PDF renderer
+        run: command -v pdftoppm || (sudo apt-get update && sudo apt-get install -y poppler-utils)
+      - run: npm run render:pdf
       - run: npm run build
       - run: npm run check
       - uses: actions/configure-pages@v5
