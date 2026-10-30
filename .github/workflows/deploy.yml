@@ -1,0 +1,49 @@
+name: Deploy portfolio
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: portfolio-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-fund --no-audit
+      - name: Refresh Notion source
+        if: env.NOTION_API_KEY != ''
+        run: npm run sync:notion
+      - name: Retain reviewed snapshot when sync is not configured
+        if: env.NOTION_API_KEY == ''
+        run: echo '::notice::Notion sync is not configured. Publishing the reviewed snapshot; Notion changes are not automatically reflected yet.'
+      - run: npm run build
+      - run: npm run check
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

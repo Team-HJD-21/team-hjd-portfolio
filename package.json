@@ -1,0 +1,16 @@
+{
+  "name": "hyunseok-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "sync:notion": "node scripts/sync-notion.mjs",
+    "preview": "node scripts/preview.mjs"
+  },
+  "dependencies": {
+    "markdown-it": "15.0.3",
+    "sanitize-html": "2.17.5"
+  }
+}

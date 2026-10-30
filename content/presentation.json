@@ -1,0 +1,26 @@
+{
+  "basePath": "/hyunseok",
+  "siteUrl": "https://portfolio.teamhjd.com",
+  "name": "양현석",
+  "englishName": "YANG HYUNSEOK",
+  "role": "GAME CLIENT DEVELOPER",
+  "featured": ["2eac8404c93280699965cedc4dffbcee", "2eac8404c932808e8da5fc03c43e41d5", "3c0c8404c9328166809ff6638824b7f9", "3f8c8404c93281dcbc99f58d5086c1e9"],
+  "projects": {
+    "3f8c8404c93281dcbc99f58d5086c1e9": {"slug":"planetx", "label":"PlanetX", "stack":"Unreal Engine · C++", "category":"tools", "imageId":"5d8a67db-409d-4d72-8511-57bcfef0a242"},
+    "3c0c8404c9328166809ff6638824b7f9": {"slug":"custom-engine", "label":"Custom Engine & Editor", "stack":"Direct3D 11 · C++", "category":"tools", "imageId":"6f68cf07-ec20-40c3-bac4-7ff46d60e7f6"},
+    "2eac8404c932808e8da5fc03c43e41d5": {"slug":"the-developer", "label":"The Developer", "stack":"Unity · C#", "category":"games", "imageId":"6fb571e6-d3e1-4ef9-84a7-ff03239ff812"},
+    "2eac8404c93280699965cedc4dffbcee": {"slug":"runster", "label":"Runster", "stack":"Unity · C#", "category":"games", "imageId":"ad245a6b-c743-4da9-9427-bc72d34618af"},
+    "2eac8404c932807b8bddc2ddb3344abf": {"slug":"iterator", "label":"Iterator", "stack":"Unreal Engine · C++", "category":"games", "imageId":"e09629e4-4fe6-4316-a21a-c0129bcdd7fc"},
+    "3f8c8404c93281208c02f4a6362359ea": {"slug":"snajper", "label":"Snajper", "stack":"Custom Engine · C++ · Lua", "category":"games", "imageId":"84a280c6-d2e8-4319-89f9-844956c55630"},
+    "3f8c8404c932815aa4c9dac9a91429ff": {"slug":"space-exe", "label":"SPACE.EXE", "stack":"Custom Engine · C++", "category":"games", "imageId":"07e597a1-a6e8-42a9-9778-732e41c9340d"},
+    "3f8c8404c9328166ba15e3c666745a5a": {"slug":"cyberpsycho", "label":"CyberPsycho", "stack":"Custom Engine · C++ · Lua", "category":"games", "imageId":"3c0a4252-ecb7-4ff9-b44f-93e15328dac3"},
+    "2eac8404c932802eb891e3fc26b68ce7": {"slug":"waving-plane", "label":"A Waving Plane", "stack":"OpenGL · C++", "category":"graphics", "imageId":"0dc0e873-e170-4414-a6d2-0e8a91a27139"},
+    "2eac8404c93280d6af37c0960a96fc53": {"slug":"robot-arm", "label":"Robot Arm", "stack":"OpenGL · C++", "category":"graphics", "imageId":"db7acdac-bdc8-4eb6-99c3-0c98fb68d78d"},
+    "2eac8404c9328032b904ed103a78ade6": {"slug":"maze-navigator", "label":"Maze Navigator", "stack":"OpenGL · C++", "category":"graphics", "imageId":"43c3b7d4-f1e0-43c9-9354-f0bcbd0dfb85"},
+    "2eac8404c932809893b8f09355fa9768": {"slug":"obj-viewer", "label":"OBJ Model Viewer", "stack":"OpenGL · C++", "category":"graphics", "imageId":"290303a3-7dca-4825-b79a-6ac93fc53b71"},
+    "2eac8404c93280ed823cfe096ae2409d": {"slug":"ray-tracer", "label":"GPU Ray Tracer", "stack":"OpenGL · C++", "category":"graphics", "imageId":"9cb4898c-ca64-412c-8624-3cf862a48c75"},
+    "2eac8404c93280c59292fc0e33614ced": {"slug":"tetris", "label":"Tetris", "stack":"C · Console", "category":"early", "imageId":"94e39623-f217-42d7-a096-323091a5ba65"},
+    "2eac8404c93280feb331fa980fd3a243": {"slug":"block-breaker", "label":"Block Breaker", "stack":"Java · Swing", "category":"early", "imageId":"fdcd8b9f-4e1e-4f4f-b4e4-7fe299c5cc7e"},
+    "2eac8404c9328079a123f7acb30ea490": {"slug":"pull-the-request", "label":"Pull the request", "stack":"Java · Swing", "category":"early", "imageId":"6e6cdca8-c960-4797-840c-dac3c59a3348"}
+  }
+}
