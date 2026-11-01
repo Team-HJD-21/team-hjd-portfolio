@@ -1,6 +1,7 @@
 {
-  "basePath": "/hyunseok",
-  "siteUrl": "https://portfolio.teamhjd.com",
+  "basePath": "",
+  "siteUrl": "https://hyunseok.teamhjd.com",
+  "legacyBasePaths": ["/hyunseok"],
   "name": "양현석",
   "englishName": "YANG HYUNSEOK",
   "role": "GAME CLIENT DEVELOPER",

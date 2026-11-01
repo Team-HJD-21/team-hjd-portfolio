@@ -81,6 +81,8 @@ function card(p){return `<article class="project-card" data-category="${p.catego
 
 const css=await fs.readFile('dark.css','utf8'), js=await fs.readFile('site.js','utf8');
 const cssHash=createHash('sha256').update(css).digest('hex').slice(0,10),jsHash=createHash('sha256').update(js).digest('hex').slice(0,10);
+if(path.dirname(out)!==root||path.basename(out)!=='dist')throw Error('Refusing to clear an unexpected output directory');
+await fs.rm(out,{recursive:true,force:true});
 await fs.mkdir(out,{recursive:true});
 const write=async(file,value)=>{let dest=path.join(out,file);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.writeFile(dest,value,'utf8');};
 await fs.cp('assets',path.join(out,base,'assets'),{recursive:true});
@@ -94,7 +96,15 @@ for(const p of projects){
  const detail=`<main id="main" class="project-page"><div class="shell"><a class="back-link" href="${base}/#projects">← 전체 프로젝트</a><div class="project-heading"><p class="eyebrow">${categories[p.category]} / ${esc(p.stack)}</p><h1>${esc(p.label)}</h1><p>${esc(p.summary)}</p><a class="text-link" href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">Notion 원본 보기 ↗</a></div><figure class="project-cover"><img src="${localImage(p.image)}" alt="${esc(p.label)} 프로젝트 화면" width="1280" height="720" fetchpriority="high"></figure><div class="project-layout"><aside class="project-aside"><p class="eyebrow">프로젝트 정보</p><p>${esc(p.stack)}</p><span>${categories[p.category]}</span><a href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">원본 문서 ↗</a><a href="mailto:${esc(email)}">연락하기 ↗</a></aside><article class="prose">${renderBody(p)}</article></div><div class="next-project"><span>계속 둘러보기</span><a href="${projects[(projects.indexOf(p)+1)%projects.length].href}">${esc(projects[(projects.indexOf(p)+1)%projects.length].label)} ↗</a></div></div></main>`;
  await write(base+'/projects/'+p.slug+'/index.html',shell(p.label+' — 양현석',p.summary,detail,p.href,p.image));
 }
-await write('index.html',`<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${base}/"><link rel="canonical" href="${origin+base}/"><title>양현석 포트폴리오</title></head><body><a href="${base}/">양현석 포트폴리오로 이동</a></body></html>`);
+const redirectPage=target=>`<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${esc(target)}"><link rel="canonical" href="${esc(origin+target)}"><title>양현석 포트폴리오</title></head><body><a href="${esc(target)}">양현석 포트폴리오로 이동</a></body></html>`;
+if(base)await write('index.html',redirectPage(base+'/'));
+for(const legacy of design.legacyBasePaths??[]){
+ if(legacy===base)continue;
+ if(!/^\/[a-z0-9-]+$/.test(legacy))throw Error('Invalid legacy path');
+ await write(legacy+'/index.html',redirectPage(base+'/'));
+ for(const p of projects)await write(legacy+'/projects/'+p.slug+'/index.html',redirectPage(p.href));
+}
+
 await write('404.html',shell('페이지를 찾을 수 없습니다 — 양현석','양현석 포트폴리오',`<main id="main" class="shell section"><p class="eyebrow">404</p><h1>페이지를 찾을 수 없습니다.</h1><p>주소가 변경되었거나 존재하지 않는 페이지입니다.</p><a class="button button-dark" href="${base}/">포트폴리오로 돌아가기 →</a></main>`,'/404.html'));
 await write('.nojekyll','');await write('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 await write('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[base+'/',...projects.map(p=>p.href)].map(p=>`<url><loc>${origin+p}</loc></url>`).join('')}</urlset>`);

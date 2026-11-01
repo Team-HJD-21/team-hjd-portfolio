@@ -4,11 +4,15 @@ import assert from 'node:assert/strict';
 const root=path.resolve('dist');
 async function files(dir){return (await Promise.all((await fs.readdir(dir,{withFileTypes:true})).map(e=>e.isDirectory()?files(path.join(dir,e.name)):[path.join(dir,e.name)]))).flat();}
 const all=await files(root),html=all.filter(p=>p.endsWith('.html'));
+const config=JSON.parse(await fs.readFile('content/presentation.json','utf8'));
+const base=config.basePath;
 const expected=JSON.parse(await fs.readFile('content/notion.json','utf8')).projects.length;
-assert.equal(html.filter(p=>p.includes(path.sep+'projects'+path.sep)).length,expected,'Expected every portfolio project');
+let projectPages=0,redirects=0;
 let checkedLinks=0;
 for(const file of html){
  const text=await fs.readFile(file,'utf8');
+ const isRedirect=text.includes('http-equiv="refresh"');
+ if(isRedirect)redirects++;else if(file.includes(path.sep+'projects'+path.sep))projectPages++;
  assert(!/X-Amz-|notion-file-block:|file-upload:|undefined|\[사진 필요|\[영상 필요|<unknown\b/.test(text),path.relative(root,file)+' contains unresolved content');
  if(!text.includes('http-equiv="refresh"'))assert.equal((text.match(/<h1[ >]/g)??[]).length,1,path.relative(root,file)+' must have one h1');
  for(const match of text.matchAll(/(?:href|src)="([^"#]+)"/g)){
@@ -17,7 +21,9 @@ for(const file of html){
   await fs.access(dest);checkedLinks++;
  }
 }
-const home=await fs.readFile('dist/hyunseok/index.html','utf8');
+assert.equal(projectPages,expected,'Expected every canonical project page');
+const home=await fs.readFile(path.join(root,base,'index.html'),'utf8');
+assert(home.includes('href="'+config.siteUrl+base+'/"'),'Canonical URL must use the active domain and base path');
 assert(home.includes('게임 시스템과 UI'),'Notion introduction missing');
 assert(!home.includes('### A Waving'),'Markdown marker leaked into summary');
 assert(home.includes('1인 개발로 기획부터 구현까지'),'Contribution summary missing');
@@ -31,5 +37,5 @@ assert.equal((home.match(/class="project-open project-row"/g)??[]).length,8,'Sup
 const nav=home.match(/<nav aria-label="주요 메뉴">([\s\S]*?)<\/nav>/)[1];
 assert.deepEqual([...nav.matchAll(/href="[^"]*#([^"]+)"/g)].map(m=>m[1]),['about','documents','projects'],'Navigation must follow landing order');
 const docs=JSON.parse(await fs.readFile('content/documents.json','utf8'));
-for(const doc of Object.values(docs)){await fs.access(path.join(root,'hyunseok',doc.file));await fs.access(path.join(root,'hyunseok',doc.preview));}
-console.log(`PASS: ${html.length} HTML pages, ${expected} project details, ${checkedLinks} local links/assets; no temporary credentials or unresolved blocks.`);
+for(const doc of Object.values(docs)){await fs.access(path.join(root,base,doc.file));await fs.access(path.join(root,base,doc.preview));}
+console.log(`PASS: ${html.length} HTML pages (${redirects} legacy redirects), ${expected} project details, ${checkedLinks} local links/assets; no temporary credentials or unresolved blocks.`);

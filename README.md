@@ -2,7 +2,7 @@
 
 Notion을 콘텐츠 원본으로 사용하는 게임 클라이언트 개발자 포트폴리오입니다. GitHub Pages용 정적 HTML을 생성합니다.
 
-- 공개 주소: `https://portfolio.teamhjd.com/hyunseok/`
+- 공개 주소: `https://hyunseok.teamhjd.com/`
 - 원본: https://anyanyang.notion.site/2e9c8404c9328051ab45c80805366ec1
 - 16개 프로젝트, 대표작 4개, 주요 작품 갤러리·보조 작품 리스트, 프로젝트 팝업 및 직접 접근 가능한 상세 페이지
 - 초기 콘텐츠는 2026-10-31에 연결된 Notion 도구로 읽었습니다. Notion에는 쓰지 않았습니다.
@@ -34,7 +34,7 @@ npm run check
 npm run preview
 ```
 
-미리보기: http://127.0.0.1:4193/hyunseok/
+미리보기: http://127.0.0.1:4193/
 
 `dist/`는 생성물입니다. 콘텐츠 또는 CSS를 바꿨으면 빌드 후 브라우저를 새로고침합니다.
 
@@ -58,7 +58,7 @@ npm run preview
 
 `.github/workflows/deploy.yml`이 main push, 수동 실행과 정기 실행을 처리합니다. 빌드·경로·콘텐츠 검증을 통과한 `dist/`만 Pages에 배포합니다. 저장소 Pages 설정의 Source는 **GitHub Actions**입니다.
 
-기존 TeamHJD 홈페이지와 별도 저장소·Pages 사이트를 사용합니다. 이 사이트의 Custom domain만 `portfolio.teamhjd.com`으로 설정하고 Cloudflare DNS의 `portfolio` CNAME을 `team-hjd-21.github.io`에 연결합니다. 대표 홈페이지의 apex·www·기존 Pages 도메인·메일 레코드는 바꾸지 않습니다. 인증서 발급 후 HTTPS 강제를 켭니다.
+개인 저장소 `yanggogi1423/portfolio`의 GitHub Pages를 사용합니다. Custom domain은 `hyunseok.teamhjd.com`이며 Cloudflare DNS의 `hyunseok` CNAME을 `yanggogi1423.github.io`에 DNS only로 연결합니다. 사이트는 별도 하위 경로 없이 루트(`/`)에서 제공합니다. 대표 홈페이지의 apex·www·기존 Pages 도메인·메일 레코드는 바꾸지 않습니다. 인증서 발급 후 HTTPS 강제를 켭니다.
 
 ## 콘텐츠 출처와 한계
 
@@ -69,3 +69,7 @@ npm run preview
 다크 모드를 기본으로 소개·기술·학력·수상을 가장 위에 둡니다. 원문 분류를 유지하고 대표작은 PlanetX → Custom Engine → The Developer → Runster 순서입니다. 장식용 로고·기울어진 이미지·채용 문구를 추가하지 않습니다. 개인 문체와 미디어 기준은 상위 `design.md`를 따릅니다.
 
 프로젝트는 목록에서 팝업으로 열며 X·Escape·배경 클릭으로 닫습니다. 닫으면 기존 목록 위치와 포커스로 돌아가고 영상도 정리합니다. 일반 링크를 보존하여 새 탭·직접 방문·JavaScript 미사용 환경에서는 상세 페이지를 열 수 있습니다. 수료증·상장·보고서는 작은 이미지 박스를 누르면 문서 팝업으로 열립니다.
+
+## 2026-11-02 이전
+
+기존 조직 저장소를 개인 저장소로 이전해 커밋 기록을 보존했습니다. 이전 `/hyunseok/` 및 각 프로젝트 경로는 현재 루트 경로로 이동하는 호환 페이지를 생성합니다. 기존 `portfolio.teamhjd.com` 호스트는 Cloudflare에서 새 도메인으로 301 이동시키며, `/hyunseok/` 접두어도 제거합니다.
