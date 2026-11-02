@@ -1,17 +1,31 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 const root=path.resolve('dist');
 async function files(dir){return (await Promise.all((await fs.readdir(dir,{withFileTypes:true})).map(e=>e.isDirectory()?files(path.join(dir,e.name)):[path.join(dir,e.name)]))).flat();}
 const all=await files(root),html=all.filter(p=>p.endsWith('.html'));
 const config=JSON.parse(await fs.readFile('content/presentation.json','utf8'));
 const base=config.basePath;
 const expected=JSON.parse(await fs.readFile('content/notion.json','utf8')).projects.length;
+const faviconDir='assets/favicons/v1/portfolio';
+const faviconManifest=JSON.parse(await fs.readFile('assets/favicons/v1/manifest.json','utf8'));
+const faviconFiles=faviconManifest.variants.find(v=>v.id==='portfolio').files;
+for(const [name,expectedFile] of Object.entries(faviconFiles)){
+ const bytes=await fs.readFile(path.join(root,base,faviconDir,name));
+ assert.equal(bytes.length,expectedFile.bytes,'Favicon size changed: '+name);
+ assert.equal(createHash('sha256').update(bytes).digest('hex'),expectedFile.sha256,'Favicon differs from shared v1: '+name);
+}
 let projectPages=0,redirects=0;
 let checkedLinks=0;
 for(const file of html){
  const text=await fs.readFile(file,'utf8');
  const isRedirect=text.includes('http-equiv="refresh"');
+ if(!isRedirect){
+  const head=text.match(/<head>([\s\S]*?)<\/head>/)[1];
+  const iconLinks=[...head.matchAll(/<link\b[^>]*rel="(?:icon|apple-touch-icon)"[^>]*>/g)].map(m=>m[0].match(/href="([^"]+)"/)[1]);
+  assert.deepEqual(iconLinks,['favicon.ico','favicon-32.png','favicon.svg','apple-touch-icon.png'].map(name=>`${base}/${faviconDir}/${name}`),'Use only the shared portfolio favicon family');
+ }
  if(isRedirect)redirects++;else if(file.includes(path.sep+'projects'+path.sep))projectPages++;
  assert(!/X-Amz-|notion-file-block:|file-upload:|undefined|\[사진 필요|\[영상 필요|<unknown\b/.test(text),path.relative(root,file)+' contains unresolved content');
  if(!text.includes('http-equiv="refresh"'))assert.equal((text.match(/<h1[ >]/g)??[]).length,1,path.relative(root,file)+' must have one h1');

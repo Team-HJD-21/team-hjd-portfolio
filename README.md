@@ -73,3 +73,9 @@ npm run preview
 ## 2026-11-02 이전
 
 기존 조직 저장소를 개인 저장소로 이전해 커밋 기록을 보존했습니다. 이전 `/hyunseok/` 및 각 프로젝트 경로는 현재 루트 경로로 이동하는 호환 페이지를 생성합니다. 기존 `portfolio.teamhjd.com` 호스트는 Cloudflare에서 새 도메인으로 301 이동시키며, `/hyunseok/` 접두어도 제거합니다.
+
+## 브라우저 파비콘
+
+`assets/favicons/v1/portfolio/`는 TeamHJD 공통 로켓에 사람 배지를 붙인 공식 v1 자산입니다. 회사 저장소 `Team-HJD-21/team-hjd-site`의 커밋 `22c596ac6ea86edd5e0f7adee07875c49e0e449a`에서 파일과 상위 `.gitattributes`, 원본 `manifest.json`을 바이트 변경 없이 복사했습니다. 기준은 해당 저장소의 `scripts/favicon-brand.md`를 따릅니다.
+
+공통 head에서 ICO → PNG → SVG 및 Apple touch icon을 같은 버전 경로로 연결합니다. 빌드는 새 아이콘을 생성하지 않으며 `npm run check`가 9개 자산의 크기·SHA256과 모든 일반 페이지의 아이콘 링크를 확인합니다. 공개된 v1 파일을 덮어쓰지 않고 디자인 개정은 v2로 분리합니다. 본문·헤더 로고·Notion 원본과는 별개인 브라우저 탭 자산입니다.
