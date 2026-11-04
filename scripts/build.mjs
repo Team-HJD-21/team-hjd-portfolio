@@ -3,7 +3,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import MarkdownIt from 'markdown-it';
 import sanitize from 'sanitize-html';
-import {header as renderHeader,footer as renderFooter,homePage} from './templates.mjs';
+import {header as renderHeader,footer as renderFooter,homePage,documentTile} from './templates.mjs';
 
 const root = process.cwd();
 const read = async p => JSON.parse(await fs.readFile(path.join(root,p),'utf8'));
@@ -68,13 +68,13 @@ function renderBody(p){
  body=body.replace(/<bookmark\b[^>]*(?:source|src)="([^"]+)"[^>]*\/>/g,(_,url)=>`\n[관련 자료 열기 ↗](${url})\n`);
  body=body.replace(/<file\b[^>]*(?:source|src)="([^"]+)"[^>]*\/>/g,(_,ref)=>{
   const doc=documents[imageId(ref)]||(ref.startsWith('assets/')&&ref.endsWith('.pdf')?{title:'첨부 문서 (PDF)',file:ref,preview:ref.slice(0,-4)+'-preview.png'}:null);
-  return doc?`\n<a class="document-tile report-tile" href="${base}/${doc.file}" target="_blank" rel="noopener noreferrer" data-preview="${base}/${doc.preview}" data-document-title="${esc(doc.title)}" aria-label="${esc(doc.title)} 크게 보기" aria-haspopup="dialog"><img src="${base}/${doc.preview}" alt="${esc(doc.title)}" loading="lazy"></a>\n`:`\n[첨부 자료 · Notion에서 보기 ↗](${p.sourceUrl})\n`;
+  return doc?`\n${documentTile(base,doc,true)}\n`:`\n[첨부 자료 · Notion에서 보기 ↗](${p.sourceUrl})\n`;
  });
  body=body.replace(/<\/?(?:columns?|span)(?:\s[^>]*)?>/g,'').replace(/<p\s*\/>/g,'\n').replace(/<\/?p>/g,'\n');
  body=body.replace(/<toggle>\s*([^\n]+)\n([\s\S]*?)<\/toggle>/g,'<details><summary>$1</summary>\n\n$2\n\n</details>');
  body=body.replace(/<empty-block\/>/g,'\n').replace(/^\s*- GitHub\s*$(?!\n\s+\S)/gm,'');
  const rendered=md.render(body);
- return sanitize(rendered,{allowedTags:[...sanitize.defaults.allowedTags,'img','figure','figcaption','iframe','details','summary'],allowedAttributes:{a:['href','title','target','rel','class','data-preview','data-document-title','aria-label','aria-haspopup'],div:['class'],img:['src','alt','loading','width','height'],iframe:['src','title','loading','allow','allowfullscreen','referrerpolicy'],details:['open'], '*':['id']},allowedClasses:{a:['document-tile','report-tile'],div:['video']},allowedIframeHostnames:['www.youtube-nocookie.com'],allowedSchemes:['http','https','mailto'],allowProtocolRelative:false,transformTags:{a:(tag,attrs)=>({tagName:tag,attribs:{...attrs,...(/^https?:/.test(attrs.href??'')?{target:'_blank',rel:'noopener noreferrer'}:{})}})}});
+ return sanitize(rendered,{allowedTags:[...sanitize.defaults.allowedTags,'img','figure','figcaption','iframe','details','summary'],allowedAttributes:{a:['href','title','target','rel','class','data-preview','data-document-title','aria-label','aria-haspopup'],span:['class','aria-hidden'],div:['class'],img:['src','alt','loading','width','height'],iframe:['src','title','loading','allow','allowfullscreen','referrerpolicy'],details:['open'], '*':['id']},allowedClasses:{a:['document-tile','report-tile'],span:['document-format'],div:['video']},allowedIframeHostnames:['www.youtube-nocookie.com'],allowedSchemes:['http','https','mailto'],allowProtocolRelative:false,transformTags:{a:(tag,attrs)=>({tagName:tag,attribs:{...attrs,...(/^https?:/.test(attrs.href??'')?{target:'_blank',rel:'noopener noreferrer'}:{})}})}});
 }
 function card(p){return `<article class="project-card" data-category="${p.category}"><a class="project-open" href="${p.href}" data-project-label="${esc(p.label)}" aria-label="${esc(p.label)} 상세 보기" aria-haspopup="dialog"><div class="project-image"><img src="${localImage(p.image)}" alt="${esc(p.label)} 실제 프로젝트 화면" loading="lazy" width="960" height="540"></div><div class="card-copy"><p class="card-meta">${esc(p.stack)}</p><h4 class="card-title">${esc(p.label)} <span aria-hidden="true">↗</span></h4><p class="card-description">${esc(p.summary)}</p></div></a></article>`;}
 

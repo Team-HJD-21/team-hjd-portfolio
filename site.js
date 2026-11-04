@@ -10,6 +10,7 @@ document.addEventListener('pointerdown',event=>{const link=event.target.closest(
 function syncScrollLock(){document.body.classList.toggle('modal-open',[documentViewer,projectViewer].some(dialog=>dialog?.open));}
 function openDocument(link){
  documentOrigin=rememberOrigin(link);
+ documentViewer.classList.toggle('portrait-preview',link.classList.contains('profile-portrait'));
  document.querySelector('#document-title').textContent=link.dataset.documentTitle;
  const image=document.querySelector('#document-image');image.src=link.dataset.preview;image.alt=link.dataset.documentTitle;
  document.querySelector('#document-original').href=link.href;
